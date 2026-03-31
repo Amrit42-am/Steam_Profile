@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steam Profile Web App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="theme-toggle-wrapper">
+      <button id="theme-toggle" class="btn btn-secondary" aria-label="Toggle Theme">
+        <img id="theme-icon-sun" src="icons/icons8-sun-30.png" alt="Light mode" width="20" height="20">
+        <img id="theme-icon-moon" src="icons/icons8-moon-50.png" alt="Dark mode" width="20" height="20" style="display: none;">
+      </button>
+    </div>
+    <header class="profile-header card">
+      <div class="header-content">
+        <!-- Avatar -->
+        <div class="avatar-wrapper">
+          <img id="profile-avatar" src="" alt="Profile Picture">
+          <span id="profile-status-indicator" class="status-dot"></span>
+        </div>
+
+        <!-- Info -->
+        <div class="profile-info">
+          <div>
+            <h1 id="profile-name" class="profile-name text-primary"></h1>
+            <p class="profile-status">
+              <span id="profile-status-dot-sm" class="status-dot-sm"></span>
+              <span id="profile-status-text"></span>
+            </p>
+          </div>
+
+          <div class="profile-meta">
+            <span class="meta-item">
+              <img src="icons/calendar (1).png" class="icon" alt="joined" width="16" height="16">
+              Joined <span id="profile-joined"></span>
+            </span>
+            <span class="meta-item">
+              <img src="icons/Globe.png" class="icon" alt="country" width="16" height="16">
+              <span id="profile-country"></span>
+            </span>
+            <span id="profile-comments" class="meta-item">
+              <img src="icons/messenger.png" class="icon" alt="comments" width="16" height="16">
+              Comments open
+            </span>
+          </div>
+
+          <div class="profile-actions">
+            <a id="profile-link" href="#" target="_blank" class="btn btn-primary-light">
+              <img src="icons/steam.png" class="icon" alt="steam" width="16" height="16">
+              Steam Profile
+            </a>
+            <span class="badge badge-secondary">
+              ID: <span id="profile-id"></span>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main class="game-library">
+      <div class="library-header">
+        <h2>Game Library <span id="game-count" class="count"></span></h2>
+      </div>
+
+      <!-- Section Tabs -->
+      <div class="section-tabs" style="overflow-x: auto; white-space: nowrap;">
+        <button class="tab-btn active" data-section="all">All Games</button>
+        <button class="tab-btn" data-section="recent">Recently Played</button>
+        <button class="tab-btn" data-section="never">Never Played</button>
+        <button class="tab-btn" data-section="win">Played on Windows</button>
+        <button class="tab-btn" data-section="mac">Played on Mac</button>
+        <button class="tab-btn" data-section="linux">Played on Linux</button>
+        <button class="tab-btn" data-section="deck">Played on Deck</button>
+        <button class="tab-btn" data-section="disconnected">Played Disconnected</button>
+      </div>
+
+      <div class="library-controls">
+        <div class="search-input">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="search-bar" placeholder="Search games...">
+        </div>
+
+        <div class="sort-input">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+          <select id="sort-select">
+            <option value="recent">Recently Played</option>
+            <option value="playtime">Most Played</option>
+            <option value="name">A-Z</option>
+          </select>
+        </div>
+
+        <button id="filter-btn" class="btn btn-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+          Filters
+        </button>
+      </div>
+
+      <div id="filter-panel" class="filter-panel" style="display: none;">
+        <label>
+          <span>Min Playtime (hours)</span>
+          <input type="range" id="min-playtime-range" min="0" max="100" value="0">
+          <span id="min-playtime-val">0h+</span>
+        </label>
+      </div>
+
+      <div id="games-grid" class="games-grid">
+        <!-- Game cards will be injected here by JS -->
+      </div>
+      <div id="no-games" class="no-games" style="display: none;">
+        <p>No games found</p>
+        <span>Try adjusting your search or filters</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal-backdrop" class="modal-backdrop" style="display: none;">
+    <div class="modal card">
+      <div class="modal-hero">
+        <img id="modal-img" src="" alt="Game Banner">
+        <div class="modal-gradient"></div>
+        <button id="modal-close" class="modal-close">
+          <img src="icons/icons8-cross-30.png" alt="close" width="18" height="18">
+        </button>
+        <h2 id="modal-title" class="modal-title text-white"></h2>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-playtime-row">
+          <div class="icon-circle bg-secondary text-primary">
+            <img src="icons/wall-clock.png" class="icon" alt="time" width="20" height="20">
+          </div>
+          <div>
+            <p class="modal-label">Total Playtime</p>
+            <p id="modal-total-playtime" class="modal-value text-foreground"></p>
+          </div>
+        </div>
+
+        <div class="platform-grid">
+          <div class="platform-card bg-secondary">
+            <img src="icons/windows.svg" class="icon" alt="Windows" style="display:block; margin: 0 auto 0.25rem;" width="20" height="20">
+            <p>Windows</p><h4 id="modal-win-playtime"></h4>
+          </div>
+          <div class="platform-card bg-secondary">
+            <img src="icons/mac.png" class="icon" alt="Mac" style="display:block; margin: 0 auto 0.25rem;" width="20" height="20">
+            <p>Mac</p><h4 id="modal-mac-playtime"></h4>
+          </div>
+          <div class="platform-card bg-secondary">
+            <img src="icons/linux.svg" class="icon" alt="Linux" style="display:block; margin: 0 auto 0.25rem;" width="20" height="20">
+            <p>Linux</p><h4 id="modal-linux-playtime"></h4>
+          </div>
+          <div class="platform-card bg-secondary">
+            <img src="icons/Portable gaming.png" class="icon" alt="Steam Deck" style="display:block; margin: 0 auto 0.25rem;" width="20" height="20">
+            <p>Steam Deck</p><h4 id="modal-deck-playtime"></h4>
+          </div>
+        </div>
+
+        <div class="modal-extra">
+          <span class="badge bg-secondary">
+            <img src="icons/no-wifi_18608820.png" class="icon" alt="offline" width="14" height="14">
+            Disconnected: <span id="modal-disconnected"></span>
+          </span>
+          <span class="badge bg-secondary">
+            <img src="icons/calendar (1).png" class="icon" alt="date" width="14" height="14">
+            Last played: <span id="modal-last-played"></span>
+          </span>
+          <span id="modal-community-btn" class="badge btn-primary-light clickable" style="display: none;">
+            Community Stats
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
